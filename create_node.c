@@ -24,51 +24,40 @@ void addNodeAtLast( void );
 void addNodeAtFirst( void );
 void addNodeBetween( int );
 int transerv();
-#if 0
-int main() {
-	int ro,i=0,j;
-	struct student *ptr[100];
-
-	for (i=0; i<=2; i++) {
-		printf("\nEnter the %d roll no ", i);
-		scanf("%d", &ro);
-		ptr[i] = create_node(ro);
-		if (i != 0) {
-			int k=i;
-			ptr[k--]->next = ptr[k];
-		}
-	}
-
-	for (j=0; j<i; j++) {
-		printf("\nroll no of %d student is %d", j, ptr[j]->roll);
-		printf("\nAddress of %d node is %p", j, ptr[j]->next);
-	}
-}
-#endif
+void delNodeAtFirst();
+void delNodeAtLast();
+void delNodeBetween( int );
+/***************************************************************************************************/
 
 int main(int argc, char *argv[])
 {
 	int add;
 	//start = create_node(10);
 	addNodeAtFirst( ); 
-	printf("My roll no is %d\n", start->roll);
+	//printf("My roll no is %d\n", start->roll);
 	
 	addNodeAtLast();
-	start = start->next;
-	printf("My roll number is %d\n", start->roll);
+	//start = start->next;
+	//printf("My roll number is %d\n", start->roll);
 	
 	addNodeAtFirst( );	
-	printf("My roll number is %d\n", start->roll);
+	//printf("My roll number is %d\n", start->roll);
 
-	add = transerv();
-	printf("Sum is %d\n", add);
+	//add = transerv();
+	//printf("Sum is %d\n", add);
 
-	addNodeAtLast();
-	start = start->next;
-	printf("My roll number is %d\n", start->roll);
+	//addNodeAtLast();
+	//start = start->next;
+	//printf("My roll number is %d\n", start->roll);
 
 	addNodeBetween(40);
 	//printf("My roll number is %d\n", start->roll);
+	
+	//delNodeAtFirst();
+	//delNodeAtLast();
+	//delNodeBetween(20);
+	add = transerv();   //TO print sum of all rolls no in linklist
+	printf("new sum is %d\n", add);
 	return 0;
 }
 
@@ -104,6 +93,8 @@ void addNodeAtLast( void ) {
 	}
 	
 	temp->next = create_node(20);
+	 temp->next->next = NULL; //remove if not work me change on 22/01/20
+	 
 }
 
 void addNodeAtFirst( void ) {
@@ -119,7 +110,7 @@ void addNodeAtFirst( void ) {
 	
 	temp = start;
 	start = create_node(40);
-	start->next = temp->next;
+	start->next = temp; //may be temp->next
 	
 }
 
@@ -153,3 +144,61 @@ int transerv() {
 	return sum;
 }
 
+void delNodeAtFirst() {
+	struct student *temp = NULL;
+	temp = start;
+	if (start == NULL ) {
+		printf("NO First node found");
+		return;
+	}
+	temp = start->next;
+	free(start);
+	start = temp;
+}
+
+void delNodeAtLast() {
+	struct student *temp = NULL;
+	temp = start;
+	if (start == NULL ) {
+		printf("List is empty!!");
+		return;
+	}
+
+	while (temp->next != NULL) {  
+		temp = temp->next;
+	}
+	free(temp);
+	temp = NULL;
+
+}
+
+void delNodeBetween( int r ) {
+	struct student *temp = NULL;
+	struct student *temp1 = NULL;
+	temp = start;
+
+	while ( temp != NULL ) {
+		if (temp->roll == r ) {
+			temp1 = temp->next;
+			free(temp);
+			start = temp1;
+			return;
+		}else if (temp->next->roll == r) {
+			temp = temp->next;
+			temp1 = temp->next;
+			//temp1 = temp1->next;
+			free(temp);
+			if (temp1 == NULL ) {
+				temp = NULL;
+				return;
+			}
+			temp = temp1;
+			return;
+		}
+
+		temp = temp->next;
+		//printf("\nnot return");
+	}
+	printf("\nNo value found");
+
+}
