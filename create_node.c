@@ -20,8 +20,8 @@ function for create node
 @param[in] name[] which is pass name of node which will be created
 ***************************************************************************************************/
 struct student *create_node(int r);
-void addNodeAtLast( void );
-void addNodeAtFirst( void );
+void addNodeAtLast( int );
+void addNodeAtFirst( int );
 void addNodeBetween( int );
 int transerv();
 void delNodeAtFirst();
@@ -33,14 +33,14 @@ int main(int argc, char *argv[])
 {
 	int add;
 	//start = create_node(10);
-	addNodeAtFirst( ); 
+	addNodeAtFirst(10); 
 	//printf("My roll no is %d\n", start->roll);
 	
-	addNodeAtLast();
+	addNodeAtLast(45);
 	//start = start->next;
 	//printf("My roll number is %d\n", start->roll);
 	
-	addNodeAtFirst( );	
+	addNodeAtFirst( 25);	
 	//printf("My roll number is %d\n", start->roll);
 
 	//add = transerv();
@@ -65,23 +65,39 @@ int main(int argc, char *argv[])
 /**************************************************************************************************/
 struct student	*create_node(int r) {
 	struct student *pointer;
+
 	pointer = (struct student*)malloc(sizeof(struct student));
 	if( NULL == pointer )
 	{
 		printf("Error! Unable to allocate memory\n");
 		exit(1);
 	}
+
 	pointer->roll = r;
 	pointer->next = NULL;
+
+	printf("Node created successfully\n");
+
 	return pointer;
 }
 
-void addNodeAtLast( void ) {
-	struct student *temp=NULL;
+void addNodeAtLast( int r ) {
+	struct student *temp=NULL,  *temp1=NULL;
 
 	if( NULL == start )
 	{
-		printf("The list is empty\n");
+		printf("The list is empty\nCreate first node here itself\n");
+		temp = create_node( r);
+                start = temp;
+                printf("The roll number is %d\n", start->roll);
+		return;
+	}
+	// This condition occurs when you have only single node in the list
+	if( start->next == NULL)
+	{
+		temp = create_node( r );
+		start->next = temp;
+		printf("The node is added at last\n");
 		return;
 	}
 
@@ -92,26 +108,27 @@ void addNodeAtLast( void ) {
 		temp = temp->next;
 	}
 	
-	temp->next = create_node(20);
-	 temp->next->next = NULL; //remove if not work me change on 22/01/20
-	 
+	temp1 = create_node(r);
+        temp->next = temp1;
+        printf("The node is added in the last\n");
 }
 
-void addNodeAtFirst( void ) {
+void addNodeAtFirst( int r ) {
 
 	struct student *temp=NULL;
 
 	if( start == NULL )
 	{
 		printf("The list is empty\n");
-		start = create_node(30);
+		temp = create_node(r);
+		start = temp;
 		return;
 	} 
 	
-	temp = start;
-	start = create_node(40);
-	start->next = temp; //may be temp->next
-	
+	temp = create_node(r);
+	temp->next = start;
+	start = temp;
+	printf("The node is added at first in the list\n");
 }
 
 void addNodeBetween( int r ) {
@@ -151,25 +168,47 @@ void delNodeAtFirst() {
 		printf("NO First node found");
 		return;
 	}
-	temp = start->next;
-	free(start);
-	start = temp;
+	temp = start;
+	start = temp->next;
+	free(temp);
+	temp = NULL;
+	printf("The very first node is deleted from the list\n");
 }
 
 void delNodeAtLast() {
-	struct student *temp = NULL;
+	 struct student *temp=NULL, *temp1=NULL;
+
+	// This condition occurs when you do not have any node in the list
+        if( start == NULL )
+        {
+                printf("The list is empty @delNodeAtLast\n");
+                return;
+        }
+
+	// This condition occurs when you have only single node in the list
+        if( start->next == NULL)
+        {
+                free(start);
+                start = NULL;
+                printf("The node is deleted\n");
+                return;
+        }
+
 	temp = start;
-	if (start == NULL ) {
-		printf("List is empty!!");
-		return;
-	}
+        temp1 = start;
 
-	while (temp->next != NULL) {  
-		temp = temp->next;
-	}
-	free(temp);
-	temp = NULL;
+        // Traverse to the last node of the list
+        while(temp->next != NULL) {
+            temp1 = temp;
+            temp = temp->next;
+        }
 
+        // Disconnects the link of second last node with last node 
+        temp1->next = NULL;
+
+        // Delete the last node
+        free(temp);
+	printf("The last node is deleted\n");
 }
 
 void delNodeBetween( int r ) {
